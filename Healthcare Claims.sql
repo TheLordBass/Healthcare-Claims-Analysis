@@ -29,3 +29,10 @@ CAST(SUM(paid_amount) / COUNT(claim_id) AS DECIMAL(10,2))  AS average_paid_per_c
 FROM claims
 GROUP BY cpt_code
 ORDER BY average_paid_per_claim DESC
+
+SELECT TOP 10
+       claim_id, member_id, claim_type, cpt_code, paid_amount,
+       COUNT(*) OVER (PARTITION BY cpt_code) AS claims_for_code,
+       CAST(AVG(paid_amount) OVER (PARTITION BY cpt_code) AS DECIMAL(10,2)) AS code_avg_paid
+FROM claims
+ORDER BY paid_amount DESC;
